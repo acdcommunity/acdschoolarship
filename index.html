@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACD Community — Bolsas de Estudo, Documentos e Tecnologia</title>
+<meta name="description" content="ACD Community: consultoria de bolsas de estudo, tradução e tratamento de documentos, agendamentos, vistos e desenvolvimento de software em Angola.">
+
+<!-- Open Graph / partilha em redes sociais -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="ACD Community — Bolsas de Estudo, Documentos e Tecnologia">
+<meta property="og:description" content="Consultoria de bolsas de estudo, tradução e tratamento de documentos, agendamentos, vistos e desenvolvimento de software em Angola.">
+<meta property="og:image" content="assets/logo.png">
+<meta property="og:locale" content="pt_AO">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Faixa de aviso -->
+<div class="topbar">
+  <div class="container">
+    <span class="dot"></span>
+    <span class="msg">Bolsas actualizadas regularmente · Desconto até 20% em pacotes de documentos · Fale connosco no WhatsApp para atendimento imediato</span>
+  </div>
+</div>
+
+<!-- Cabeçalho -->
+<header class="site">
+  <nav class="nav container">
+    <a class="brand" href="#inicio">
+      <img src="assets/logo.png" alt="Logótipo ACD Community">
+      <span class="word">ACD Community<small>CIÊNCIA &amp; TECNOLOGIA</small></span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#bolsas">Bolsas de Estudo</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#sobre">Sobre Nós</a></li>
+      <li><a href="#contactos">Contactos</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn btn-outline btn-sm" href="#contactos">Contactos</a>
+      <a class="btn btn-whats btn-sm" data-whats-link href="#" target="_blank" rel="noopener">Obter Serviço</a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="inicio">
+  <div class="container">
+    <div>
+      <span class="eyebrow">Angola · Consultoria de Bolsas &amp; Documentos</span>
+      <h1>O seu processo para estudar lá fora, <em>tratado do princípio ao fim.</em></h1>
+      <p class="lead">A ACD Community trata da tradução e legalização dos seus documentos, inscrição em bolsas de estudo, agendamentos, vistos e acompanhamento — tudo num único lugar, com actualizações constantes sobre as bolsas disponíveis.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#bolsas">Ver bolsas disponíveis</a>
+        <a class="btn btn-whats" data-whats-link href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm5.6 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.7-2.8-1.1-4.6-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.5c-.1.2-.3.3-.1.6.2.4.9 1.5 2 2.3 1.3 1 1.5 1 1.8.9.2 0 .4-.2.6-.5l.5-.7c.2-.3.4-.2.6-.1l1.7.9c.2.1.4.2.5.3.1.2.1.9-.1 1.6z"/></svg>
+          Falar no WhatsApp
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>6+</strong><span>países com bolsas activas</span></div>
+        <div><strong>20%</strong><span>desconto em pacotes</span></div>
+        <div><strong>4</strong><span>áreas de actuação</span></div>
+      </div>
+    </div>
+    <div class="seal-wrap">
+      <div class="seal"><img src="assets/logo.png" alt="Selo ACD Community"></div>
+      <div class="seal-badge"><span class="dot"></span> Documentos válidos &amp; certificados</div>
+    </div>
+  </div>
+</section>
+
+<!-- Bolsas de Estudo -->
+<section class="bolsas-bg" id="bolsas">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Actualizado regularmente</span>
+      <h2>Bolsas de estudo disponíveis</h2>
+      <p>Consulte os países com processos abertos ou em curso. Esta lista é actualizada directamente pela equipa ACD — volte sempre que quiser ver novidades.</p>
+    </div>
+    <div class="bolsas-grid" id="bolsas-grid"><!-- gerado por js/main.js a partir de js/data.js --></div>
+
+    <div class="docs-note reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+      <div>
+        <h4>Documentos necessários para concorrer</h4>
+        <p>Certificado, Histórico Escolar, Diploma, BI, Cédula Pessoal e Assento de Nascimento — traduzidos e tratados pela ACD. Veja os preços de cada documento na secção de Serviços, logo abaixo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Serviços -->
+<section id="servicos">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Tabela de preços</span>
+      <h2>Os nossos serviços</h2>
+      <p>Da tradução de documentos ao visto de viagem. Escolha uma categoria e peça o serviço directamente pelo WhatsApp.</p>
+    </div>
+
+    <div class="avisos-row">
+      <div class="aviso">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 2 21h20z"/><path d="M12 9v5M12 17h.01"/></svg>
+        <span id="aviso-desconto"></span>
+      </div>
+      <div class="aviso">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+        <span id="aviso-inscricao"></span>
+      </div>
+      <div class="aviso urgente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span id="aviso-urgencia"></span>
+      </div>
+    </div>
+
+    <div class="servicos-tabs" id="servicos-tabs"></div>
+    <div id="servicos-panel"></div>
+  </div>
+</section>
+
+<!-- Sobre -->
+<section class="bolsas-bg" id="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div>
+        <span class="eyebrow">Quem somos</span>
+        <h2>Sobre a ACD Community</h2>
+        <p id="sobre-texto"></p>
+        <div class="pilares" id="pilares-grid"></div>
+      </div>
+
+      <div class="socials-card">
+        <span class="eyebrow" style="background:transparent;border-color:var(--teal);color:var(--teal);">Siga-nos</span>
+        <h3>Conhecimento é poder.</h3>
+        <p style="color:#c9d8d7;">Siga a ACD Community para receber mais informações sobre bolsas, serviços e novidades.</p>
+        <ul class="social-list" id="social-list"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contactos -->
+<section id="contactos">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Fale connosco</span>
+      <h2>Contactos</h2>
+    </div>
+
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .7 3a2 2 0 0 1-.4 2.1L8 10.3a16 16 0 0 0 6 6l1.5-1.5a2 2 0 0 1 2.1-.4c1 .3 2 .5 3 .7a2 2 0 0 1 1.7 2z"/></svg>
+          <span id="contact-tels"></span>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+          <a id="contact-email" href="#"></a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Angola</span>
+        </div>
+      </div>
+      <div class="contact-cta">
+        <h3>Precisa de um serviço agora?</h3>
+        <p>Escreva-nos directamente no WhatsApp e receba atendimento imediato.</p>
+        <a class="btn btn-primary" data-whats-direct href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm5.6 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.7-2.8-1.1-4.6-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.5c-.1.2-.3.3-.1.6.2.4.9 1.5 2 2.3 1.3 1 1.5 1 1.8.9.2 0 .4-.2.6-.5l.5-.7c.2-.3.4-.2.6-.1l1.7.9c.2.1.4.2.5.3.1.2.1.9-.1 1.6z"/></svg>
+          Obter serviço no WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<a class="float-whats" data-whats-link href="#" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm5.6 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.7-2.8-1.1-4.6-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.5c-.1.2-.3.3-.1.6.2.4.9 1.5 2 2.3 1.3 1 1.5 1 1.8.9.2 0 .4-.2.6-.5l.5-.7c.2-.3.4-.2.6-.1l1.7.9c.2.1.4.2.5.3.1.2.1.9-.1 1.6z"/></svg>
+  Obter Serviço
+</a>
+
+<!-- Modal de detalhes da bolsa -->
+<div class="modal-overlay" id="bolsa-modal">
+  <div class="modal-box">
+    <button class="modal-close" data-close-modal aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div id="bolsa-modal-body"></div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="container">
+    <div class="brand-f"><img src="assets/logo.png" alt="ACD Community"> ACD Community</div>
+    <small>© <span id="year"></span> ACD Community — Ciência &amp; Tecnologia, Angola · <a href="admin.html" style="color:#6a8382;">Painel de administração</a></small>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
