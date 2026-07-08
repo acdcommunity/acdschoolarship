@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel de Administração — ACD Community</title>
+<link rel="icon" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{ background:var(--paper-dim); }
+  .admin-wrap{ max-width:920px; margin:0 auto; padding:40px 24px 100px; }
+  .admin-head{ display:flex; align-items:center; gap:14px; margin-bottom:30px; }
+  .admin-head img{ width:42px; height:42px; border-radius:50%; }
+  .admin-head h1{ font-size:1.3rem; margin:0; }
+  .admin-head span{ display:block; font-family:var(--font-mono); font-size:.72rem; color:var(--ink-soft); }
+
+  .gate{ max-width:380px; margin:14vh auto; text-align:center; }
+  .gate input{ width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line); margin:16px 0; font-size:1rem; }
+  .gate .error{ color:var(--stamp-red); font-size:.85rem; min-height:1.2em; }
+
+  .panel{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:var(--shadow-doc); }
+  .panel h2{ font-size:1.05rem; margin-bottom:4px; }
+  .panel .hint{ font-size:.83rem; color:var(--ink-soft); margin-bottom:20px; }
+
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:.8rem; font-weight:600; margin-bottom:6px; color:var(--ink); }
+  .field .sub{ font-weight:400; color:var(--ink-soft); font-size:.75rem; }
+  .field input, .field select, .field textarea{
+    width:100%; padding:10px 12px; border-radius:8px; border:1.5px solid var(--line);
+    font-family:var(--font-body); font-size:.9rem; background:var(--paper);
+  }
+  .field textarea{ min-height:74px; resize:vertical; font-family:var(--font-mono); font-size:.8rem; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  @media (max-width:640px){ .grid2, .grid3{ grid-template-columns:1fr; } }
+
+  .checkbox-row{ display:flex; align-items:center; gap:8px; font-size:.85rem; font-weight:600; }
+  .checkbox-row input{ width:auto; }
+
+  .bolsa-row{
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    padding:14px 16px; border:1px solid var(--line); border-radius:10px; margin-bottom:10px; background:var(--paper);
+  }
+  .bolsa-row .info strong{ display:block; font-size:.95rem; }
+  .bolsa-row .info span{ font-size:.78rem; color:var(--ink-soft); }
+  .bolsa-row .actions{ display:flex; gap:8px; flex:none; }
+
+  .form-actions{ display:flex; gap:12px; margin-top:22px; flex-wrap:wrap; }
+  .status-msg{ font-size:.85rem; margin-top:10px; }
+  .status-msg.ok{ color:#1f7a3d; }
+  .status-msg.error{ color:var(--stamp-red); }
+
+  .download-box{ background:var(--ink); color:var(--paper); }
+  .download-box .hint{ color:#a9bdbc; }
+  .download-box .btn-primary{ background:var(--teal); color:var(--ink); }
+  .download-box .btn-primary:hover{ background:var(--teal-deep); color:#fff; }
+
+  textarea#preview{
+    width:100%; min-height:200px; font-family:var(--font-mono); font-size:.75rem;
+    background:#0a1717; color:#c9e9e6; border-radius:10px; border:none; padding:16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barreira de acesso -->
+<div class="gate" id="gate">
+  <img src="assets/logo.png" alt="ACD Community" style="width:60px;border-radius:50%;margin:0 auto;">
+  <h1 style="margin-top:16px;">Painel de Administração</h1>
+  <p style="color:var(--ink-soft);font-size:.88rem;">Introduza a senha de acesso para editar as bolsas e informações do site.</p>
+  <input type="password" id="gate-input" placeholder="Senha" autocomplete="off">
+  <div class="error" id="gate-error"></div>
+  <button class="btn btn-primary" id="gate-btn" style="width:100%;justify-content:center;">Entrar</button>
+  <p style="font-size:.72rem;color:var(--ink-soft);margin-top:20px;">
+    A senha é definida em <code>js/data.js</code> (objecto <code>ADMIN</code>). Isto é apenas um travão simples — não substitui protecção real ao nível da hospedagem.
+  </p>
+</div>
+
+<!-- Conteúdo do painel (só aparece depois de entrar) -->
+<div class="admin-wrap" id="painel" style="display:none;">
+  <div class="admin-head">
+    <img src="assets/logo.png" alt="ACD Community">
+    <div>
+      <h1>Painel de Administração</h1>
+      <span>ACD Community · gestão de bolsas e informações do site</span>
+    </div>
+  </div>
+
+  <!-- Lista de bolsas existentes -->
+  <div class="panel">
+    <h2>Bolsas de estudo actuais</h2>
+    <p class="hint">Edite ou remova bolsas já existentes. Para adicionar uma nova, use o formulário mais abaixo.</p>
+    <div id="bolsas-lista"></div>
+  </div>
+
+  <!-- Formulário de bolsa -->
+  <div class="panel">
+    <h2 id="form-titulo">Adicionar nova bolsa</h2>
+    <p class="hint">Preencha pelo menos País, Estado e o intervalo de preço do serviço. Os restantes campos são opcionais — deixe em branco o que não se aplica.</p>
+
+    <input type="hidden" id="f-index" value="-1">
+
+    <div class="grid2">
+      <div class="field"><label>País *</label><input id="f-pais" placeholder="Ex: Sérvia"></div>
+      <div class="field"><label>Nome do programa <span class="sub">(opcional)</span></label><input id="f-programa" placeholder="Ex: World in Serbia"></div>
+    </div>
+
+    <div class="grid3">
+      <div class="field">
+        <label>Estado *</label>
+        <select id="f-status">
+          <option value="aberta">Inscrições abertas</option>
+          <option value="processando">A processar</option>
+          <option value="brevemente">Brevemente</option>
+        </select>
+      </div>
+      <div class="field"><label>Nível <span class="sub">(opcional)</span></label><input id="f-nivel" placeholder="Ex: Licenciatura, Mestrado"></div>
+      <div class="field"><label>Vagas <span class="sub">(opcional)</span></label><input id="f-vagas" type="number" min="0" placeholder="Ex: 100"></div>
+    </div>
+
+    <div class="grid3">
+      <div class="field"><label>Financiamento <span class="sub">(opcional)</span></label><input id="f-financiamento" placeholder="Ex: Totalmente financiada"></div>
+      <div class="field"><label>Prazo <span class="sub">(opcional — calcula estado sozinho)</span></label><input id="f-prazo" type="date"></div>
+      <div class="field"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="field"><label>Preço do serviço ACD — mínimo (Kz) *</label><input id="f-preco-min" type="number" min="0" value="4000"></div>
+      <div class="field"><label>Preço do serviço ACD — máximo (Kz) *</label><input id="f-preco-max" type="number" min="0" value="7000"></div>
+    </div>
+
+    <div class="field"><label>Nota curta <span class="sub">(aparece no cartão)</span></label><input id="f-nota" placeholder="Ex: Inscrições a decorrer"></div>
+
+    <div class="grid2">
+      <div class="field"><label>Benefícios <span class="sub">(um por linha, opcional)</span></label><textarea id="f-beneficios" placeholder="Alojamento gratuito&#10;Subsídio mensal"></textarea></div>
+      <div class="field"><label>Áreas prioritárias <span class="sub">(uma por linha, opcional)</span></label><textarea id="f-areas" placeholder="Tecnologia&#10;Engenharia"></textarea></div>
+    </div>
+
+    <div class="grid2">
+      <div class="field"><label>Requisitos <span class="sub">(um por linha, opcional)</span></label><textarea id="f-requisitos"></textarea></div>
+      <div class="field"><label>Documentos necessários <span class="sub">(um por linha, opcional)</span></label><textarea id="f-documentos"></textarea></div>
+    </div>
+
+    <div class="grid3">
+      <div class="field"><label>E-mail de envio <span class="sub">(opcional)</span></label><input id="f-email-envio" placeholder="nome@exemplo.com"></div>
+      <div class="field"><label>Link do formulário <span class="sub">(opcional)</span></label><input id="f-link-form" placeholder="https://..."></div>
+      <div class="field"><label>Link do edital <span class="sub">(opcional)</span></label><input id="f-link-info" placeholder="https://..."></div>
+    </div>
+
+    <div class="field"><label>Observação importante <span class="sub">(opcional, aparece em destaque)</span></label><textarea id="f-observacao"></textarea></div>
+
+    <label class="checkbox-row"><input type="checkbox" id="f-active" checked> Bolsa visível no site</label>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" id="f-guardar">Guardar bolsa</button>
+      <button class="btn btn-outline" id="f-limpar">Limpar formulário</button>
+    </div>
+    <div class="status-msg" id="f-status"></div>
+  </div>
+
+  <!-- Definições gerais -->
+  <div class="panel">
+    <h2>Definições gerais</h2>
+    <p class="hint">Contacto e avisos que aparecem em várias partes do site.</p>
+    <div class="grid2">
+      <div class="field"><label>E-mail de contacto</label><input id="s-email"></div>
+      <div class="field"><label>Número de WhatsApp <span class="sub">(só dígitos, com código do país)</span></label><input id="s-whatsapp"></div>
+    </div>
+    <div class="field"><label>Aviso — desconto</label><input id="s-aviso-desconto"></div>
+    <div class="field"><label>Aviso — inscrição para bolsa</label><input id="s-aviso-inscricao"></div>
+    <div class="field"><label>Aviso — urgência</label><input id="s-aviso-urgencia"></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="s-guardar">Guardar definições</button>
+    </div>
+    <div class="status-msg" id="s-status"></div>
+  </div>
+
+  <!-- Publicar -->
+  <div class="panel download-box">
+    <h2 style="color:var(--paper);">Publicar as alterações</h2>
+    <p class="hint">As alterações feitas acima ficam apenas neste navegador até serem publicadas. Descarregue o novo ficheiro <code>data.js</code> e substitua o ficheiro <code>js/data.js</code> no seu repositório do GitHub (depois faça <code>commit</code> + <code>push</code> — ou arraste o ficheiro directamente na página do GitHub).</p>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="btn-baixar">⬇ Descarregar data.js actualizado</button>
+      <button class="btn btn-outline" id="btn-ver" style="border-color:var(--paper);color:var(--paper);">Ver código gerado</button>
+    </div>
+    <textarea id="preview" style="display:none;margin-top:16px;" readonly></textarea>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+/* ============================================================
+   Estado em memória (parte de data.js, só é gravado quando
+   a pessoa descarrega o novo ficheiro e o publica no GitHub)
+   ============================================================ */
+let bolsasState = JSON.parse(JSON.stringify(BOLSAS));
+
+/* ---------- Barreira de acesso ---------- */
+document.getElementById("gate-btn").addEventListener("click", tentarEntrar);
+document.getElementById("gate-input").addEventListener("keydown", e => { if(e.key === "Enter") tentarEntrar(); });
+function tentarEntrar(){
+  const val = document.getElementById("gate-input").value;
+  if(val === (typeof ADMIN !== "undefined" ? ADMIN.senha : "")){
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("painel").style.display = "block";
+    iniciarPainel();
+  } else {
+    document.getElementById("gate-error").textContent = "Senha incorrecta. Tente novamente.";
+  }
+}
+
+function iniciarPainel(){
+  renderLista();
+  carregarDefinicoes();
+  document.getElementById("f-guardar").addEventListener("click", guardarBolsa);
+  document.getElementById("f-limpar").addEventListener("click", limparForm);
+  document.getElementById("s-guardar").addEventListener("click", guardarDefinicoes);
+  document.getElementById("btn-baixar").addEventListener("click", baixarFicheiro);
+  document.getElementById("btn-ver").addEventListener("click", verCodigo);
+}
+
+/* ---------- Lista de bolsas ---------- */
+function renderLista(){
+  const wrap = document.getElementById("bolsas-lista");
+  if(!bolsasState.length){
+    wrap.innerHTML = `<p class="hint">Ainda não há bolsas registadas.</p>`;
+    return;
+  }
+  wrap.innerHTML = bolsasState.map((b, i) => `
+    <div class="bolsa-row">
+      <div class="info">
+        <strong>${b.pais}${b.programa ? " — " + b.programa : ""} ${b.active ? "" : "<span style='color:var(--stamp-red);font-size:.72rem;'>(oculta)</span>"}</strong>
+        <span>${b.status} · ${b.priceMin || 0}–${b.priceMax || 0} Kz${b.prazo ? " · prazo " + b.prazo : ""}</span>
+      </div>
+      <div class="actions">
+        <button class="btn btn-outline btn-sm" data-edit="${i}">Editar</button>
+        <button class="btn btn-outline btn-sm" data-del="${i}" style="border-color:var(--stamp-red);color:var(--stamp-red);">Remover</button>
+      </div>
+    </div>
+  `).join("");
+  wrap.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => carregarParaEdicao(Number(b.dataset.edit))));
+  wrap.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => {
+    if(confirm("Remover esta bolsa da lista?")){
+      bolsasState.splice(Number(b.dataset.del), 1);
+      renderLista();
+    }
+  }));
+}
+
+/* ---------- Formulário de bolsa ---------- */
+const linhas = txt => txt.split("\n").map(s => s.trim()).filter(Boolean);
+const juntar = arr => (arr || []).join("\n");
+
+function carregarParaEdicao(i){
+  const b = bolsasState[i];
+  document.getElementById("f-index").value = i;
+  document.getElementById("form-titulo").textContent = "A editar: " + b.pais;
+  document.getElementById("f-pais").value = b.pais || "";
+  document.getElementById("f-programa").value = b.programa || "";
+  document.getElementById("f-status").value = b.status || "processando";
+  document.getElementById("f-nivel").value = b.nivel || "";
+  document.getElementById("f-vagas").value = b.vagas || "";
+  document.getElementById("f-financiamento").value = b.financiamento || "";
+  document.getElementById("f-prazo").value = b.prazo || "";
+  document.getElementById("f-preco-min").value = b.priceMin || 0;
+  document.getElementById("f-preco-max").value = b.priceMax || 0;
+  document.getElementById("f-nota").value = b.nota || "";
+  document.getElementById("f-beneficios").value = juntar(b.beneficios);
+  document.getElementById("f-areas").value = juntar(b.areas);
+  document.getElementById("f-requisitos").value = juntar(b.requisitos);
+  document.getElementById("f-documentos").value = juntar(b.documentos);
+  document.getElementById("f-email-envio").value = b.emailEnvio || "";
+  document.getElementById("f-link-form").value = b.linkFormulario || "";
+  document.getElementById("f-link-info").value = b.linkInfo || "";
+  document.getElementById("f-observacao").value = b.observacao || "";
+  document.getElementById("f-active").checked = b.active !== false;
+  window.scrollTo({ top: document.getElementById("form-titulo").offsetTop - 20, behavior: "smooth" });
+}
+
+function limparForm(){
+  document.getElementById("f-index").value = -1;
+  document.getElementById("form-titulo").textContent = "Adicionar nova bolsa";
+  ["f-pais","f-programa","f-nivel","f-vagas","f-financiamento","f-prazo","f-nota",
+   "f-beneficios","f-areas","f-requisitos","f-documentos","f-email-envio","f-link-form","f-link-info","f-observacao"]
+   .forEach(id => document.getElementById(id).value = "");
+  document.getElementById("f-status").value = "aberta";
+  document.getElementById("f-preco-min").value = 4000;
+  document.getElementById("f-preco-max").value = 7000;
+  document.getElementById("f-active").checked = true;
+  document.getElementById("f-status").textContent = "";
+}
+
+function guardarBolsa(){
+  const pais = document.getElementById("f-pais").value.trim();
+  if(!pais){
+    document.getElementById("f-status").textContent = "Indique pelo menos o nome do país.";
+    document.getElementById("f-status").className = "status-msg error";
+    return;
+  }
+  const obj = { pais };
+  const opt = (id, key, num) => {
+    const v = document.getElementById(id).value.trim();
+    if(v) obj[key] = num ? Number(v) : v;
+  };
+  obj.programa = document.getElementById("f-programa").value.trim() || undefined;
+  obj.status = document.getElementById("f-status").value;
+  opt("f-nivel","nivel");
+  opt("f-vagas","vagas", true);
+  opt("f-financiamento","financiamento");
+  opt("f-prazo","prazo");
+  obj.priceMin = Number(document.getElementById("f-preco-min").value) || 0;
+  obj.priceMax = Number(document.getElementById("f-preco-max").value) || 0;
+  opt("f-nota","nota");
+  const b1 = linhas(document.getElementById("f-beneficios").value); if(b1.length) obj.beneficios = b1;
+  const a1 = linhas(document.getElementById("f-areas").value); if(a1.length) obj.areas = a1;
+  const r1 = linhas(document.getElementById("f-requisitos").value); if(r1.length) obj.requisitos = r1;
+  const d1 = linhas(document.getElementById("f-documentos").value); if(d1.length) obj.documentos = d1;
+  opt("f-email-envio","emailEnvio");
+  opt("f-link-form","linkFormulario");
+  opt("f-link-info","linkInfo");
+  opt("f-observacao","observacao");
+  obj.active = document.getElementById("f-active").checked;
+
+  const idx = Number(document.getElementById("f-index").value);
+  if(idx >= 0) bolsasState[idx] = obj;
+  else bolsasState.unshift(obj);
+
+  renderLista();
+  limparForm();
+  const msg = document.getElementById("f-status");
+  msg.textContent = "Bolsa guardada. Não esqueça de descarregar e publicar o data.js no fim da página.";
+  msg.className = "status-msg ok";
+}
+
+/* ---------- Definições gerais ---------- */
+let contactosState = JSON.parse(JSON.stringify(CONTACTOS));
+let avisosState = JSON.parse(JSON.stringify(AVISOS));
+
+function carregarDefinicoes(){
+  document.getElementById("s-email").value = contactosState.email || "";
+  document.getElementById("s-whatsapp").value = contactosState.whatsappNumero || "";
+  document.getElementById("s-aviso-desconto").value = avisosState.desconto || "";
+  document.getElementById("s-aviso-inscricao").value = avisosState.inscricaoBolsa || "";
+  document.getElementById("s-aviso-urgencia").value = avisosState.urgencia || "";
+}
+function guardarDefinicoes(){
+  contactosState.email = document.getElementById("s-email").value.trim();
+  contactosState.whatsappNumero = document.getElementById("s-whatsapp").value.trim();
+  avisosState.desconto = document.getElementById("s-aviso-desconto").value.trim();
+  avisosState.inscricaoBolsa = document.getElementById("s-aviso-inscricao").value.trim();
+  avisosState.urgencia = document.getElementById("s-aviso-urgencia").value.trim();
+  const msg = document.getElementById("s-status");
+  msg.textContent = "Definições guardadas. Descarregue e publique o data.js no fim da página.";
+  msg.className = "status-msg ok";
+}
+
+/* ---------- Gerar / descarregar data.js ---------- */
+function gerarFicheiro(){
+  return `/* =========================================================================
+   ACD COMMUNITY — FICHEIRO DE DADOS
+   Gerado pelo Painel de Administração em ${new Date().toLocaleString("pt-PT")}
+   ========================================================================= */
+
+const BOLSAS = ${JSON.stringify(bolsasState, null, 2)};
+
+const SERVICOS = ${JSON.stringify(SERVICOS, null, 2)};
+
+const AVISOS = ${JSON.stringify(avisosState, null, 2)};
+
+const CONTACTOS = ${JSON.stringify(contactosState, null, 2)};
+
+const SOBRE = ${JSON.stringify(SOBRE, null, 2)};
+
+const ADMIN = ${JSON.stringify(ADMIN, null, 2)};
+`;
+}
+
+function baixarFicheiro(){
+  const blob = new Blob([gerarFicheiro()], { type: "text/javascript" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "data.js";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function verCodigo(){
+  const pre = document.getElementById("preview");
+  pre.style.display = pre.style.display === "none" ? "block" : "none";
+  pre.value = gerarFicheiro();
+}
+</script>
+</body>
+</html>
